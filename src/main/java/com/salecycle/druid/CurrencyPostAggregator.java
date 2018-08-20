@@ -126,6 +126,58 @@ public class CurrencyPostAggregator implements PostAggregator {
         }
         return cacheKeyBuilder.build();
     }
+    @Override
+    public String toString()
+    {
+        return "CurrencyPostAggregator{" +
+                "name='" + name + '\'' +
+                ", currency='" + currency + '\'' +
+                ", field=" + field +
+                ", currencyField=" + currencyField +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        CurrencyPostAggregator that = (CurrencyPostAggregator) o;
+
+        if (!conversions.equals(that.conversions)) {
+            return false;
+        }
+        if (!field.equals(that.field)) {
+            return false;
+        }
+        if (!currencyField.equals(that.currencyField)) {
+            return false;
+        }
+        if (name != null ? !name.equals(that.name) : that.name != null) {
+            return false;
+        }
+        if (!currency.equals(that.currency)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + field.hashCode();
+        result = 31 * result + currencyField.hashCode();
+        result = 31 * result + currency.hashCode();
+        result = 31 * result + conversions.hashCode();
+        return result;
+    }
 
     private double convertCurrency(String fromCurrency, double value) {
         if (fromCurrency.equals(currency)) {
