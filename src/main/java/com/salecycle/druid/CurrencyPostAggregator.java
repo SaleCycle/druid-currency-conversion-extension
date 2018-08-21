@@ -10,21 +10,21 @@ import io.druid.java.util.common.guava.Comparators;
 import io.druid.query.aggregation.AggregatorFactory;
 import io.druid.query.aggregation.PostAggregator;
 import io.druid.query.cache.CacheKeyBuilder;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * CurrencyPostAggregator converts all currency outputs to a target currency
+ * CurrencyPostAggregator converts all outputs based on a conversions map
+ *
+ * If a currency is not included in the conversions map, the returned value will be 0.0
  *
  * post aggregator example:
  * <pre>{@code
  * {
  *   "type": "currencyConversion",
  *   "name": "convertedValue",
- *   "currency": "GBP",
  *   "field": { "type" : "fieldAccess", "name": "total", "fieldName" : "total" },
  *   "currencyField": { "type" : "fieldAccess", "name": "currency", "fieldName" : "currency" },
  *   "conversions": {"USD": 1.6, "GBP": 1.0, "EUR": 0.89}
@@ -36,7 +36,6 @@ public class CurrencyPostAggregator implements PostAggregator {
     private static final Comparator DEFAULT_COMPARATOR = Comparators.naturalNullsFirst();
     private final ObjectMapper mapper = new ObjectMapper();
     private String name;
-    private String currency;
     private Map<String, Double> conversions;
     private final PostAggregator field;
     private final PostAggregator currencyField;
@@ -44,19 +43,16 @@ public class CurrencyPostAggregator implements PostAggregator {
     @JsonCreator
     public CurrencyPostAggregator(
       @JsonProperty("name") String name,
-      @JsonProperty("currency") String currency,
       @JsonProperty("conversions") Map<String, Double> conversions,
       @JsonProperty("field") PostAggregator field,
       @JsonProperty("currencyField") PostAggregator currencyField
     ){
-        Preconditions.checkArgument(StringUtils.isNotBlank(currency), "currency cannot be null");
         Preconditions.checkArgument(conversions != null && conversions.size() > 0, "must have a conversion set");
         Preconditions.checkArgument(!conversions.containsValue(null), "no conversion value can be null");
         Preconditions.checkArgument(field != null, "field cannot be null");
         Preconditions.checkArgument(currencyField != null, "currency field cannot be null");
 
         this.name = name;
-        this.currency = currency;
         this.conversions = conversions;
         this.field = field;
         this.currencyField = currencyField;
@@ -89,11 +85,6 @@ public class CurrencyPostAggregator implements PostAggregator {
         return name;
     }
 
-    @JsonProperty("currency")
-    public String getCurrency() {
-        return currency;
-    }
-
     @JsonProperty("conversions")
     public Map<String, Double> getConversions() {
         return conversions;
@@ -115,7 +106,6 @@ public class CurrencyPostAggregator implements PostAggregator {
     @Override
     public byte[] getCacheKey() {
         CacheKeyBuilder cacheKeyBuilder = new CacheKeyBuilder(CURRENCY)
-                .appendString(currency)
                 .appendCacheable(field)
                 .appendCacheable(currencyField);
         // append conversions
@@ -131,7 +121,6 @@ public class CurrencyPostAggregator implements PostAggregator {
     {
         return "CurrencyPostAggregator{" +
                 "name='" + name + '\'' +
-                ", currency='" + currency + '\'' +
                 ", field=" + field +
                 ", currencyField=" + currencyField +
                 '}';
@@ -161,10 +150,6 @@ public class CurrencyPostAggregator implements PostAggregator {
         if (name != null ? !name.equals(that.name) : that.name != null) {
             return false;
         }
-        if (!currency.equals(that.currency)) {
-            return false;
-        }
-
         return true;
     }
 
@@ -174,16 +159,15 @@ public class CurrencyPostAggregator implements PostAggregator {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + field.hashCode();
         result = 31 * result + currencyField.hashCode();
-        result = 31 * result + currency.hashCode();
         result = 31 * result + conversions.hashCode();
         return result;
     }
 
     private double convertCurrency(String fromCurrency, double value) {
-        if (fromCurrency.equals(currency)) {
-            return value;
+        Double multiplier = conversions.get(fromCurrency);
+        if (multiplier == null) {
+            return 0.0;
         }
-        double multiplier = conversions.get(fromCurrency);
         return value * multiplier;
     }
 }
