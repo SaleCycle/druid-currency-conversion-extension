@@ -7,7 +7,7 @@
     <groupId>com.salecycle</groupId>
     <artifactId>druid-currency</artifactId>
     <name>druid-currency</name>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <build>
         <plugins>
             <plugin>
@@ -42,7 +42,7 @@
     </build>
 
     <properties>
-        <jackson.version>2.6.7</jackson.version>
+        <jackson.version>2.9.5</jackson.version>
     </properties>
 
     <dependencies>
