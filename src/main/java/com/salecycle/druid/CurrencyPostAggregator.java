@@ -32,6 +32,7 @@ import java.util.Set;
  * }</pre>
  */
 public class CurrencyPostAggregator implements PostAggregator {
+    private final double epsilon = 0.00001;
     private final byte CURRENCY = 1;
     private static final Comparator DEFAULT_COMPARATOR = Comparators.naturalNullsFirst();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -164,6 +165,10 @@ public class CurrencyPostAggregator implements PostAggregator {
     }
 
     private double convertCurrency(String fromCurrency, double value) {
+        // if value is 0ish, just call it 0
+        if (value >= -epsilon && value <= epsilon) {
+            return 0.0;
+        }
         Double multiplier = conversions.get(fromCurrency);
         if (multiplier == null) {
             return 0.0;
