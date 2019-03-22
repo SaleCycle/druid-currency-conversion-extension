@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.inject.Binder;
-import io.druid.initialization.DruidModule;
+import org.apache.druid.initialization.DruidModule;
 
 import java.util.Collections;
 import java.util.List;
