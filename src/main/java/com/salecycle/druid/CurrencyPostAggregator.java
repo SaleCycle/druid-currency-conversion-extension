@@ -6,10 +6,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import io.druid.java.util.common.guava.Comparators;
-import io.druid.query.aggregation.AggregatorFactory;
-import io.druid.query.aggregation.PostAggregator;
-import io.druid.query.cache.CacheKeyBuilder;
+import org.apache.druid.java.util.common.guava.Comparators;
+import org.apache.druid.query.aggregation.AggregatorFactory;
+import org.apache.druid.query.aggregation.PostAggregator;
+import org.apache.druid.query.cache.CacheKeyBuilder;
 
 import java.util.Comparator;
 import java.util.Map;

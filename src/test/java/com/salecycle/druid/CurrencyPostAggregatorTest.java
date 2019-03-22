@@ -1,8 +1,8 @@
 package com.salecycle.druid;
 
-import io.druid.query.aggregation.CountAggregator;
-import io.druid.query.aggregation.PostAggregator;
-import io.druid.query.aggregation.post.FieldAccessPostAggregator;
+import org.apache.druid.query.aggregation.CountAggregator;
+import org.apache.druid.query.aggregation.PostAggregator;
+import org.apache.druid.query.aggregation.post.FieldAccessPostAggregator;
 import org.junit.Test;
 
 import java.util.HashMap;
