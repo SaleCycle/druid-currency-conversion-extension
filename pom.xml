@@ -5,12 +5,12 @@
     <groupId>com.salecycle</groupId>
     <artifactId>druid-currency</artifactId>
     <name>druid-currency</name>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1</version>
 
     <scm>
         <connection>scm:git:git@github.com:SaleCycle/druid-currency-conversion-extension.git</connection>
         <developerConnection>scm:git:git@github.com:SaleCycle/druid-currency-conversion-extension.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v3.0.1</tag>
     </scm>
 
     <build>
