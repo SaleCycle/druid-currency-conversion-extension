@@ -75,8 +75,12 @@ public class CurrencyPostAggregator implements PostAggregator {
     @Override
     public Object compute(Map<String, Object> values) {
         double value = ((Number) field.compute(values)).doubleValue();
-        String fieldCurrency = currencyField.compute(values).toString();
-        return convertCurrency(fieldCurrency, value);
+        Object fieldCurrency = currencyField.compute(values);
+        if (fieldCurrency == null) {
+            return null;
+        }
+
+        return convertCurrency(fieldCurrency.toString(), value);
     }
 
     @Override
